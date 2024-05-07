@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<head>
+  <title>CS AA2</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffd1dc; /* pastel pink */
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    fieldset {
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+    legend {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      width: calc(100% - 22px);
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #4CAF50;
+    }
+    input[type="submit"],
+    input[type="reset"] {
+      width: 100%;
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    input[type="submit"]:hover,
+    input[type="reset"]:hover {
+      background-color: #45a049;
+    }
+    .output {
+      margin-top: 20px;
+    }
+    .small {
+      font-size: 80%;
+      color: red;
+    }
+    #password {
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+    }
+    #password-strength {
+      width: calc(100% - 22px);
+      height: 10px;
+      background-color: #eee;
+      border-radius: 5px;
+      margin-top: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+    #strength-bar {
+      height: 100%;
+      width: 0;
+      background-color: red;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #strength-text {
+      margin-top: 5px;
+      color: red;
+      font-size: 80%;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <form id="signup-form">
+    <fieldset>
+      <legend>Sign Up</legend>
+      <label for="name">Name <span class="small">(Last Name, First Name M.I.)</span>:</label>
+      <input type="text" id="name" required onblur="checkInput(this)" onfocus="clearBorder(this)" placeholder="e.g. Liceralde, Clyza Yzabelle O.">
+      
+      <label for="username">Preferred Username <span class="small">(Usernames can contain letters (a-z), numbers (0-9), periods (.), and underscores (_))</span>:</label>
+      <input type="text" id="username" required onblur="checkInput(this)" onfocus="clearBorder(this)" placeholder="e.g. @Bellatrixx19_">
+      
+      <label for="sex">Sex:</label>
+      <select id="sex" required onblur="checkInput(this)" onfocus="clearBorder(this)">
+        <option value="" disabled selected>Select sex</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Prefer not to mention</option>
+      </select>
+      
+      <label for="password">Password:</label>
+      <input type="password" id="password" required oninput="checkPasswordStrength(this)" onblur="checkInput(this)" onfocus="clearBorder(this)">
+      <div id="password-strength">
+        <div id="strength-bar"></div>
+      </div>
+      <div id="strength-text"></div>
+      
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" required onblur="checkEmail(this)" onfocus="clearEmailError()" placeholder="e.g. cyliceralde@src.pshs.edu.ph">
+      <span id="email-error" class="small" style="display: none;">(Valid email: @src.pshs.edu.ph)</span>
+      
+      <label for="country">Country:</label>
+      <select id="country" required>
+        <option value="" disabled selected>Select country</option>
+        <option value="Philippines">Philippines</option>
+      </select>
+      
+      <label for="region">Region:</label>
+      <select id="region" required onchange="populateCities(this)">
+        <option value="" disabled selected>Select region</option>
+        <option value="Region I">Region I: Ilocos Region</option>
+        <option value="Region II">Region II: Cagayan Valley</option>
+        <option value="Region III">Region III: Central Luzon</option>
+        <option value="Region IV-A">Region IV-A: CALABARZON</option>
+        <option value="Region IV-B">Region IV-B: MIMAROPA</option>
+        <option value="Region V">Region V: Bicol Region</option>
+        <option value="CAR">CAR: Cordillera Administrative Region</option>
+        <option value="NCR">NCR: National Capital Region</option>
+        <option value="Region VI">Region VI: Western Visayas</option>
+        <option value="Region VII">Region VII: Central Visayas</option>
+        <option value="Region VIII">Region VIII: Eastern Visayas</option>
+        <option value="Region IX">Region IX: Zamboanga Peninsula</option>
+        <option value="Region X">Region X: Northern Mindanao</option>
+        <option value="Region XI">Region XI: Davao Region</option>
+        <option value="Region XII">Region XII: SOCCSKSARGEN</option>
+        <option value="Region XIII">Region XIII: Caraga</option>
+        <option value="BARMM">BARMM: Bangsamoro Autonomous Region in Muslim Mindanao</option>
+      </select>
+      
+      <label for="city">City/Municipality:</label>
+      <select id="city" required>
+        <option value="" disabled selected>Select city/municipality</option>
+      </select>
+      
+      <label for="address">Address <span class="small">(Street Name, Purok Name, Baranggay Name)</span>:</label>
+      <textarea id="address" rows="2" required onblur="checkInput(this)" onfocus="clearBorder(this)"></textarea>
+      
+      <label for="interest">Your Interests:</label>
+      <textarea id="interest" rows="4" required oninput="countCharacters(this)" onblur="checkInput(this)" onfocus="clearBorder(this)"></textarea>
+      <div id="character-count" class="small" style="text-align: right; color: red;">0/10,000</div>
+    </fieldset>
+    
+    <input type="submit" value="Submit">
+    <input type="reset" value="Reset">
+  </form>
+
+  <div class="output" id="output"></div>
+</div>
+
+<script>
+  function checkInput(element) {
+    var value = element.value.trim();
+    if (value === "") {
+      element.style.borderColor = "red";
+    } else {
+      element.style.borderColor = "green";
+    }
+    
+    // Change color based on selected sex
+    if (element.id === "sex") {
+      var color = "";
+      switch (value) {
+        case "male":
+          color = "blue";
+          break;
+        case "female":
+          color = "pink";
+          break;
+        case "other":
+          color = "#D2B48C"; // Light brown
+          break;
+        default:
+          color = ""; // Default color if not specified
+          break;
+      }
+      element.style.color = color;
+    }
+  }
+  
+  function clearBorder(element) {
+    element.style.borderColor = "";
+  }
+
+  function checkEmail(emailInput) {
+    var email = emailInput.value.trim();
+    var re = /\S+@(src\.pshs\.edu\.ph|gmail\.com|outlook\.com|yahoo\.com)$/i;
+    var emailError = document.getElementById("email-error");
+    if (!re.test(email)) {
+      emailError.style.display = "inline";
+      emailInput.style.borderColor = "red";
+    } else {
+      emailError.style.display = "none";
+      emailInput.style.borderColor = "green";
+    }
+  }
+
+  function clearEmailError() {
+    var emailError = document.getElementById("email-error");
+    emailError.style.display = "none";
+  }
+
+  function countCharacters(element) {
+    var count = element.value.length;
+    var characterCount = document.getElementById("character-count");
+    characterCount.textContent = count + "/10,000";
+    if (count > 10000) {
+      element.value = element.value.substring(0, 10000);
+      characterCount.textContent = "10,000/10,000";
+    }
+  }
+
+  function checkPasswordStrength(passwordInput) {
+    var password = passwordInput.value;
+    var strengthBar = document.getElementById("strength-bar");
+    var strengthText = document.getElementById("strength-text");
+    
+    // Reset styles
+    strengthBar.style.backgroundColor = "red";
+    strengthBar.style.width = "0";
+    strengthText.textContent = "";
+    strengthText.style.color = "red";
+
+    if (password.length < 8 || password.toLowerCase() === password) {
+      // Weak password
+      strengthBar.style.width = "25%";
+      strengthText.textContent = "Weak: The password contains fewer than eight characters, or it uses a single word or easily guessable phrase.";
+    } else if (password.length >= 8 && password.length < 12) {
+      // Medium password
+      strengthBar.style.width = "50%";
+      strengthBar.style.backgroundColor = "#fed85d"; // Dandelion shade
+      strengthText.textContent = "Medium: Combination of letters (uppercase and lowercase) and numbers.";
+      strengthText.style.color = "#fed85d"; // Dandelion shade
+    } else {
+      // Strong password
+      strengthBar.style.width = "100%";
+      strengthBar.style.backgroundColor = "green";
+      strengthText.textContent = "Strong: Random combination of letters (uppercase and lowercase), numbers, and symbols.";
+      strengthText.style.color = "green";
+    }
+  }
+
+  function populateCities(regionSelect) {
+    var citySelect = document.getElementById("city");
+    citySelect.innerHTML = ""; // Clear previous options
+    
+    var region = regionSelect.value;
+    var cities = [];
+
+    switch (region) {
+      case "Region I":
+        cities = ["Laoag", "Vigan", "San Fernando (La Union)", "Dagupan"];
+        break;
+      case "Region II":
+        cities = ["Tuguegarao", "Santiago"];
+        break;
+      case "Region III":
+        cities = ["Angeles", "Balanga", "Cabanatuan", "Malolos", "Meycauayan", "Olongapo", "San Fernando (Pampanga)", "San Jose del Monte", "Tarlac City"];
+        break;
+      case "Region IV-A":
+        cities = ["Antipolo", "Bacoor", "Batangas City", "Biñan", "Cabuyao", "Calamba", "Cavite City", "Lipa", "Santa Rosa", "San Pablo", "Tagaytay", "Tanauan", "Taytay"];
+        break;
+      case "Region IV-B":
+        cities = ["Calapan", "Puerto Princesa"];
+        break;
+      case "Region V":
+        cities = ["Iriga", "Legazpi", "Ligao", "Masbate City", "Naga", "Sorsogon City"];
+        break;
+      case "CAR":
+        cities = ["Baguio"];
+        break;
+      case "NCR":
+        cities = ["Manila", "Quezon City", "Caloocan", "Las Piñas", "Makati", "Malabon", "Mandaluyong", "Marikina", "Muntinlupa", "Navotas", "Parañaque", "Pasay", "Pasig", "San Juan", "Taguig", "Valenzuela"];
+        break;
+      case "Region VI":
+        cities = ["Bacolod", "Iloilo City", "Passi", "Roxas"];
+        break;
+      case "Region VII":
+        cities = ["Bais", "Bayawan", "Bogo", "Carcar", "Cebu City", "Danao", "Dumaguete", "Lapu-Lapu", "Mandaue", "Naga", "Tagbilaran", "Talisay (Cebu)"];
+        break;
+      case "Region VIII":
+        cities = ["Baybay", "Borongan", "Calbayog", "Catbalogan", "Maasin", "Ormoc", "Tacloban"];
+        break;
+      case "Region IX":
+        cities = ["Dapitan", "Dipolog", "Pagadian", "Zamboanga City"];
+        break;
+      case "Region X":
+        cities = ["Cagayan de Oro", "El Salvador", "Gingoog", "Malaybalay", "Ozamiz", "Tangub", "Valencia"];
+        break;
+      case "Region XI":
+        cities = ["Davao City", "Digos", "Panabo", "Samal", "Tagum"];
+        break;
+      case "Region XII":
+        cities = ["Cotabato City", "General Santos", "Kidapawan", "Koronadal", "Tacurong"];
+        break;
+      case "Region XIII":
+        cities = ["Bislig", "Butuan", "Cabadbaran", "Surigao City", "Tandag"];
+        break;
+      case "BARMM":
+        cities = ["Cotabato City", "Lamitan", "Marawi"];
+        break;
+      default:
+        break;
+    }
+
+    cities.forEach(function(city) {
+      var option = document.createElement("option");
+      option.text = city;
+      citySelect.add(option);
+    });
+  }
+
+  // Function to display user information
+  function displayUserInfo() {
+    var name = document.getElementById("name").value.trim();
+    var username = document.getElementById("username").value.trim();
+    var sex = document.getElementById("sex").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var country = document.getElementById("country").value.trim();
+    var region = document.getElementById("region").value.trim();
+    var city = document.getElementById("city").value.trim();
+    var address = document.getElementById("address").value.trim();
+    var interest = document.getElementById("interest").value.trim();
+
+    var outputDiv = document.getElementById("output");
+    outputDiv.innerHTML = "<h2>" + name.split(", ")[1].split(" ")[0] + "'s Information</h2>" +
+                          "<p><strong>Name:</strong> " + name + "</p>" +
+                          "<p><strong>Username:</strong> " + username + "</p>" +
+                          "<p><strong>Sex:</strong> " + sex + "</p>" +
+                          "<p><strong>Email Address:</strong> " + email + "</p>" +
+                          "<p><strong>Country:</strong> " + country + "</p>" +
+                          "<p><strong>Region:</strong> " + region + "</p>" +
+                          "<p><strong>City/Municipality:</strong> " + city + "</p>" +
+                          "<p><strong>Address:</strong> " + address + "</p>" +
+                          "<p><strong>Interests:</strong> " + interest + "</p>";
+  }
+
+  // Prevent default form submission and display user information
+  document.getElementById("signup-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    displayUserInfo();
+  });
+
+</script>
+
+</body>
+</html>
